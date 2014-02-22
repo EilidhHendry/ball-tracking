@@ -12,3 +12,5 @@ for k = 1 : size(filenames,1)
     drawnow('expose');
     disp(['showing frame ' num2str(k)]);
 end
+
+% I hate Matlab
