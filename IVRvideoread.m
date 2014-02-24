@@ -1,5 +1,4 @@
-
-file_dir = 'Video2/'; %put here one of the folder locations with images;
+file_dir = 'Video1/'; %put here one of the folder locations with images;
 filenames = dir([file_dir '*.jpg']);
 
 frame = myrgb2gray(imread([file_dir filenames(1).name]));
