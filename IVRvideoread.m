@@ -10,12 +10,21 @@ edges = zeros(256,1);
   end
 
 show = 1;
-  
-bckgrnd = myrgb2gray(imread([file_dir filenames(5).name]));
-bckgrnd = double (bckgrnd);
-[R,C] = size(bckgrnd);
-bckgrndVec = reshape(bckgrnd,1,R*C);      % turn image into long array
-hist = histc(bckgrndVec,edges)';        % do histogram
+
+bckgrnd = imread([file_dir filenames(5).name]);
+hsvBG = rgb2hsv(bckgrnd);
+V = histeq(hsvBG(:,:,3));
+hsvBG(:,:,3) = V;
+rgbBG = hsv2rgb(hsvBG);
+grayBG = myrgb2gray(rgbBG * 255);
+grayBG = double (grayBG);
+
+
+% Plotting the histogram:
+
+% [R,C] = size(bckgrnd);
+% bckgrndVec = reshape(bckgrnd,1,R*C);      % turn image into long array
+% hist = histc(bckgrndVec,edges)';        % do histogram
 %   if show > 0
 %       figure(show)
 %       clf
@@ -29,18 +38,26 @@ hist = histc(bckgrndVec,edges)';        % do histogram
 for k = 1 : size(filenames,1)
     
     % Create 1-D grayscale vector of image
-    frame = myrgb2gray(imread([file_dir filenames(k).name]));
-    frame = double(frame);
-    frameVec = reshape(frame,1,480*640);
+    frame = imread([file_dir filenames(k).name]);
+    
+    % Normalization
+    hsvframe = rgb2hsv(frame);
+    V = histeq(hsvframe(:,:,3));
+    hsvframe(:,:,3) = V;
+    rgbframe = hsv2rgb(hsvframe);
+    
+    grayframe = myrgb2gray(rgbframe*255);
+    grayframe = double(grayframe);
+    frameVec = reshape(grayframe,1,480*640);
     
     % Divide image with background frame
-    frameDiff = frame./bckgrnd;
+    frameDiff = grayframe./grayBG;
     
     % Object/background relative brightness threshold
     thresh = 0.8;
     
     object = (frameDiff <= thresh);
-    %object = reshape(object,480,640);
+    object = reshape(object,480,640);
     object = 255*object;
     
     set(h1, 'CData', object);
