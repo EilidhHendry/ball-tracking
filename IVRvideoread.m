@@ -12,11 +12,8 @@ edges = zeros(256,1);
 show = 1;
 
 bckgrnd = imread([file_dir filenames(5).name]);
-hsvBG = rgb2hsv(bckgrnd);
-V = histeq(hsvBG(:,:,3));
-hsvBG(:,:,3) = V;
-rgbBG = hsv2rgb(hsvBG);
-grayBG = myrgb2gray(rgbBG * 255);
+%bckgrnd = normalize(bckgrnd);                   
+grayBG = myrgb2gray(bckgrnd);              
 grayBG = double (grayBG);
 
 
@@ -40,13 +37,10 @@ for k = 1 : size(filenames,1)
     % Create 1-D grayscale vector of image
     frame = imread([file_dir filenames(k).name]);
     
-    % Normalization
-    hsvframe = rgb2hsv(frame);
-    V = histeq(hsvframe(:,:,3));
-    hsvframe(:,:,3) = V;
-    rgbframe = hsv2rgb(hsvframe);
+    % Normalization  - this slows down the prgram a lot
+%     frame = normalize(frame);
     
-    grayframe = myrgb2gray(rgbframe*255);
+    grayframe = myrgb2gray(frame);
     grayframe = double(grayframe);
     frameVec = reshape(grayframe,1,480*640);
     
