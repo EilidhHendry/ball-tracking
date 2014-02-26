@@ -1,7 +1,6 @@
 file_dir = 'Video1/'; %put here one of the folder locations with images;
 filenames = dir([file_dir '*.jpg']);
 
-%frame = myrgb2gray(imread([file_dir filenames(1).name]));
 frame = rgb2hsv(imread([file_dir filenames(1).name]));
 figure(1); h1 = imshow(frame);
 
@@ -13,11 +12,6 @@ edges = zeros(256,1);
 show = 1;
 
 bckgrnd = imread([file_dir filenames(5).name]);
-
-%gray:
-%bckgrnd = normalize(bckgrnd);                   
-%grayBG = myrgb2gray(bckgrnd);              
-%grayBG = double (grayBG);
 
 %hsv:
 bckgrnd = normalize(bckgrnd);
@@ -56,10 +50,12 @@ for k = 1 : size(filenames,1)
     
     % Object/background relative brightness threshold
     thresh = 0.4;
+       
+    %frameDiff=abs(hsvBG-hsvframe);
     
-    object = (frameDiff <= thresh);
-        
-    set(h1, 'CData', object);
+    change = (frameDiff <= thresh);
+            
+    set(h1, 'CData', change);
     drawnow('expose');
     disp(['showing frame ' num2str(k)]);
 end

@@ -51,8 +51,8 @@ for k = 1 : size(filenames,1)
     thresh = 0.8;
     
     object = (frameDiff <= thresh);
- %   object = reshape(object,480,640);
- %   object = 255*object;
+    object = reshape(object,480,640);
+    object = 255*object;
     
     set(h1, 'CData', object);
     drawnow('expose');
