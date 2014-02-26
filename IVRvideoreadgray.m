@@ -42,13 +42,13 @@ for k = 1 : size(filenames,1)
     
     grayframe = myrgb2gray(frame);
     grayframe = double(grayframe);
-    frameVec = reshape(grayframe,1,480*640);
     
     % Divide image with background frame
-    frameDiff = grayframe./grayBG;
+    frameDiff = abs(grayframe./grayBG);
+    %frameDiff = abs(grayBG-grayframe);
     
     % Object/background relative brightness threshold
-    thresh = 0.8;
+    thresh = 0.80;
     
     object = (frameDiff <= thresh);
     object = reshape(object,480,640);

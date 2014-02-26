@@ -12,14 +12,16 @@ edges = zeros(256,1);
 show = 1;
 
 bckgrnd = imread([file_dir filenames(5).name]);
-bckgrnd = double(bckgrnd);
 
-%bckgrnd = normalize(bckgrnd);
+%hsv:
+bckgrnd = normalize(bckgrnd);
+hsvBG = rgb2hsv(bckgrnd);
+hsvBG = double (hsvBG);
 
 % Plotting the histogram:
 
-%[R,C] = size(bckgrnd);
-% bckgrndVec = reshape(bckgrnd,1,R*C);      % turn image into long array
+%[R,C] = size(hsvBG);
+ %bckgrndVec = reshape(bckgrnd,1,R*C);      % turn image into long array
 % hist = histc(bckgrndVec,edges)';        % do histogram
 %   if show > 0
 %       figure(show)
@@ -35,22 +37,24 @@ for k = 1 : size(filenames,1)
     
     % Create 1-D grayscale vector of image
     frame = imread([file_dir filenames(k).name]);
-    frame = double(frame);   
-    
+    frame = double(frame);
+   
     % Normalization  - this slows down the prgram a lot
-    %frame = normalize(frame);
+    frame = normalize(frame);
+
+    %HSV:
+    hsvframe = rgb2hsv(frame);
+    hsvframe = double(hsvframe); 
     
     % Object/background relative brightness threshold
-    % if greater than thresh then background if less than 50 then change
-    thresh = 45;
-       
-    frameDiff=abs(bckgrnd-frame);
+    % if greater than thresh then background if less than thresh then object
+    thresh = 90;
     
-    frameDiff1=frameDiff(1:100);
+    %subtract frame from background
+    frameDiff=abs(hsvBG-hsvframe);
     
-    change = (frameDiff > thresh);
-    change1 = double(change(1:640));
- 
+    %check if the subtraction is greater than the threshold
+    change = (frameDiff <= thresh); 
             
     set(h1, 'CData', change);
     drawnow('expose');
