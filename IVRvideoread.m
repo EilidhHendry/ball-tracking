@@ -58,8 +58,6 @@ for k = 1 : size(filenames,1)
     thresh = 0.4;
     
     object = (frameDiff <= thresh);
-    
-    %change=abs(hsvBG-hsvframe);
         
     set(h1, 'CData', object);
     drawnow('expose');
