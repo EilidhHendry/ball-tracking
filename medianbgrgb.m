@@ -34,7 +34,7 @@ bckgrnd = zeros(480,640,3);
 bckgrnd(:,:,1) = medred;
 bckgrnd(:,:,2) = medblue;
 bckgrnd(:,:,3) = medgreen;
-bckgrnd = normalize(bckgrnd);
+% bckgrnd = normalize(bckgrnd);
 
 % Read one frame at a time.
 for k = 1 : size(filenames,1)

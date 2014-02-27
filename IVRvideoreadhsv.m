@@ -36,7 +36,6 @@ for k = 1 : size(filenames,1)
     
     % Create 1-D grayscale vector of image
     frame = imread([file_dir filenames(k).name]);
-    frame = double(frame);
    
     % Normalization  - this slows down the prgram a lot
     % frame = normalize(frame);
@@ -44,17 +43,21 @@ for k = 1 : size(filenames,1)
     %HSV:
     hsvframe = rgb2hsv(frame);
     
-    % Object/background relative brightness threshold
+    % Make the values doubles
+    frame = double(frame);
+    
+    % Hue, Saturation and Value thresholds
     % if greater than thresh then background if less than thresh then object
-    HSthresh = 0.1;
-    Vthresh = 2;
+    Hthresh = 0.1;
+    Sthresh = 0.1;
+    Vthresh = 0.1;
     
     %subtract frame from background
     frameDiff = abs(hsvBG-hsvframe);
     
     %check if the subtraction is greater than the threshold
-    change(:,:,1) = (frameDiff(:,:,1) > HSthresh);
-    change(:,:,2) = (frameDiff(:,:,2) > HSthresh);
+    change(:,:,1) = (frameDiff(:,:,1) > Hthresh);
+    change(:,:,2) = (frameDiff(:,:,2) > Sthresh);
     change(:,:,3) = (frameDiff(:,:,3) > Vthresh);
     
     change(:,:,1) = change(:,:,1) & change(:,:,2) & change(:,:,3);
