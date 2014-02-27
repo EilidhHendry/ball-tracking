@@ -22,7 +22,7 @@ for k = 1 : 50
     frame = imread([file_dir filenames(k).name]);
     red(:,:,k) = frame(:,:,1);
     blue(:,:,k) = frame(:,:,2);
-    green(:,:,k) = frame(:,:,2);
+    green(:,:,k) = frame(:,:,3);
     
 end
 
@@ -48,7 +48,7 @@ for k = 1 : size(filenames,1)
     
     % Object/background relative brightness threshold
     % if greater than thresh then background if less than 50 then change
-    thresh = 45;
+    thresh = 30;
        
     frameDiff=abs(bckgrnd-frame);
     

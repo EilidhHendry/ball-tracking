@@ -1,13 +1,8 @@
 file_dir = 'Video1/'; %put here one of the folder locations with images;
 filenames = dir([file_dir '*.jpg']);
 
-frame = rgb2hsv(imread([file_dir filenames(1).name]));
+frame = imread([file_dir filenames(1).name]);
 figure(1); h1 = imshow(frame);
-
-edges = zeros(256,1);
-  for i = 1 : 256;
-    edges(i) = i-1;
-  end
 
 show = 1;
 
@@ -17,6 +12,11 @@ bckgrnd = double(bckgrnd);
 %bckgrnd = normalize(bckgrnd);
 
 % Plotting the histogram:
+
+% edges = zeros(256,1);
+%   for i = 1 : 256;
+%     edges(i) = i-1;
+%   end
 
 %[R,C] = size(bckgrnd);
 % bckgrndVec = reshape(bckgrnd,1,R*C);      % turn image into long array
@@ -42,17 +42,23 @@ for k = 1 : size(filenames,1)
     
     % Object/background relative brightness threshold
     % if greater than thresh then background if less than 50 then change
-    thresh = 45;
+    thresh = 10;
        
     frameDiff=abs(bckgrnd-frame);
-    
-    frameDiff1=frameDiff(1:100);
+    %frameDiff1=frameDiff(1:100);
     
     change = (frameDiff > thresh);
-    change1 = double(change(1:640));
- 
-            
-    set(h1, 'CData', change);
+    
+    change(:,:,1) = change(:,:,1) & change(:,:,2) & change(:,:,3);
+    change(:,:,2) = change(:,:,1) & change(:,:,2) & change(:,:,3);
+    change(:,:,3) = change(:,:,1) & change(:,:,2) & change(:,:,3);
+    
+    display = change .* frame;
+    display = display ./ 255;
+    
+    % change1 = double(change(1:640));
+    
+    set(h1, 'CData', display);
     drawnow('expose');
     disp(['showing frame ' num2str(k)]);
 end
