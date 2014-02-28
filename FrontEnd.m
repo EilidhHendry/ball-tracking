@@ -24,7 +24,10 @@ for k = 1 : size(filenames,1)
     % Compare the binary threshold with the original frame
     % to retrieve the original colours of the image.
     display = ORthresh(binaryImage, frame);
-    %display = ANDthresh(binaryImage, frame);    
+    %display = ANDthresh(binaryImage, frame);
+    
+    center = getCenter(display);
+    display(center(1),center(2),:) = [1 1 1];
     
     % Display image
     set(h1, 'CData', display);
