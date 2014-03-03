@@ -28,6 +28,10 @@ for k = 1 : size(filenames,1)
     
     center = getCenter(display);
     display(center(1),center(2),:) = [1 1 1];
+    display(center(1)+1,center(2),:) = [1 1 1];
+    display(center(1)-1,center(2),:) = [1 1 1];
+    display(center(1),center(2)+1,:) = [1 1 1];
+    display(center(1),center(2)-1,:) = [1 1 1];    
     
     % Display image
     set(h1, 'CData', display);
