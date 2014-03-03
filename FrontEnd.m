@@ -12,14 +12,14 @@ figure(1); h1 = imshow(frame);
 background = RGBmedianBG(file_dir, filenames, 50);
 
 % Cycle through each frame in the set of images
-for k = 1 : size(filenames,1)
+for k = 240 : size(filenames,1)
     
     % Read the frame from the source directory
     frame = imread([file_dir filenames(k).name]);
     
     % Retrieve the binary matrix corresponding to the
     % moving object pixels
-    binaryImage = RGBremoveBG(frame, background, 10);
+    binaryImage = RGBremoveBG(frame, background, 30);
     
     % Compare the binary threshold with the original frame
     % to retrieve the original colours of the image.
@@ -27,14 +27,17 @@ for k = 1 : size(filenames,1)
     %display = ANDthresh(binaryImage, frame);
     
     center = getCenter(display);
-    display(center(1),center(2),:) = [1 1 1];
-    display(center(1)+1,center(2),:) = [1 1 1];
-    display(center(1)-1,center(2),:) = [1 1 1];
-    display(center(1),center(2)+1,:) = [1 1 1];
-    display(center(1),center(2)-1,:) = [1 1 1];    
+    
+    if center(1) > 1 && center(2)  > 1
+        frame(center(1),center(2),:) = [255 255 255];
+        frame(center(1)+1,center(2),:) = [255 255 255];
+        frame(center(1)-1,center(2),:) = [255 255 255];
+        frame(center(1),center(2)+1,:) = [255 255 255];
+        frame(center(1),center(2)-1,:) = [255 255 255];
+    end
     
     % Display image
-    set(h1, 'CData', display);
+    set(h1, 'CData', frame);
     drawnow('expose');
     disp(['showing frame ' num2str(k)]);
 end
