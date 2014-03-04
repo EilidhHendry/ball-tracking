@@ -12,6 +12,7 @@ function binaryImage = RGBremoveBG(frame, background, threshold)
     frameDiff=abs(background-frame);
     
     % Logical matrix encoding RGB values above the threshold
-    binaryImage = (frameDiff > threshold);
+    binaryImage = frameDiff > threshold;
+    
     
 end
