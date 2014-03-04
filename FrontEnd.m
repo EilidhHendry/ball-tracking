@@ -1,7 +1,7 @@
 % Project Front-End for displaying main output.
 
 % Location of image files
-file_dir = 'Video2/';
+file_dir = 'Video1/';
 filenames = dir([file_dir '*.jpg']);
 
 % Initialise the display handle
@@ -14,8 +14,11 @@ background = frame;
 
 display = zeros(480,640,3);
 
+path1 = zeros(500,2);
+path2 = zeros(500,2);
+
 % Cycle through each frame in the set of images
-for k = 240 : size(filenames,1)
+for k = 300 : size(filenames,1)
     
     % Read the frame from the source directory
     frame = imread([file_dir filenames(k).name]);
@@ -38,13 +41,11 @@ for k = 240 : size(filenames,1)
     blobFinder = vision.BlobAnalysis('AreaOutputPort',true,...
                                    'CentroidOutputPort',true,...
                                    'BoundingBoxOutputPort',true,...
-                                   'MinimumBlobArea', 50);
-                               
-    [area,centers,box] = step(blobFinder, binaryImage2D);
+                                   'MinimumBlobArea', 50);                               
     
-    centers = uint16(fliplr(centers));
+    [path1, path2] = updatePaths(path1, path2, binaryImage2D, blobFinder);    
     
-    display = drawPath(display, centers);
+    display = drawPath(path1, display);
     display = display ./ 255;
     
     % Display image
