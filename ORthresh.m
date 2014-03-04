@@ -1,31 +1,17 @@
-% Creates an image of the moving objects without
-% the background and with the original colours of
-% the image.
+% Creates a 2D binary image of the moving objects without
+% the background.
 
 % The three channels of the binary matrix are logical
-% OR'd together to obtain the original colours.
+% OR'd together to obtain a 2D binary image.
 
 % OR produces better recall but results in more background
 % noise.
 
-function colorImage =ORthresh(binaryImage, frame)
-
-    % Convert the frame values to floating point doubles
-    frame = double(frame);   
+function binaryImage2D =ORthresh(binaryImage3D)  
 
     % We logical OR the matrices for each channel together
     % In order to preserve the original output for the included pixels
-    binaryImage(:,:,1) = binaryImage(:,:,1) | binaryImage(:,:,2) | binaryImage(:,:,3);
-    binaryImage(:,:,2) = binaryImage(:,:,1) | binaryImage(:,:,2) | binaryImage(:,:,3);
-    binaryImage(:,:,3) = binaryImage(:,:,1) | binaryImage(:,:,2) | binaryImage(:,:,3);
+    binaryImage2D = binaryImage3D(:,:,1) | binaryImage3D(:,:,2) | binaryImage3D(:,:,3);
     
-    % Multiply the logical matrix with the original frame to 
-    % retrieve the included pixels' original RGB values
-    colorImage = binaryImage .* frame;
-        
-    % Since the image is in doubles, we want the values between
-    % zero and one.
-    colorImage = colorImage ./ 255;
-
 end
 

@@ -5,7 +5,8 @@
 function binaryImage = RGBremoveBG(frame, background, threshold)
     
     % Convert the frame values to floating point doubles
-    frame = double(frame);   
+    frame = double(frame);
+    background = double(background);
     
     % Subtraction matrix
     frameDiff=abs(background-frame);
