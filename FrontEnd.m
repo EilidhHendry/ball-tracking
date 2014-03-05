@@ -17,8 +17,10 @@ display = zeros(480,640,3);
 path1 = zeros(500,2);
 path2 = zeros(500,2);
 
+highestReached=0;
+
 % Cycle through each frame in the set of images
-for k = 1100 : size(filenames,1)
+for k = 280 : size(filenames,1)
     
     % Read the frame from the source directory
     frame = imread([file_dir filenames(k).name]);
@@ -44,7 +46,7 @@ for k = 1100 : size(filenames,1)
                                    'MinimumBlobArea', 50);    
     [path1, path2] = updatePaths2(path1, path2, binaryImage2D, blobFinder);    
     
-    display = drawPath(path1, display);
+    [display,highestReached] = drawPath(path1,0,0,255,display,highestReached);
     display = display ./ 255;
     
     % Display image
