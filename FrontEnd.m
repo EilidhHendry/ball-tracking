@@ -18,14 +18,14 @@ path1 = zeros(500,2);
 path2 = zeros(500,2);
 
 % Cycle through each frame in the set of images
-for k = 300 : size(filenames,1)
+for k = 1100 : size(filenames,1)
     
     % Read the frame from the source directory
     frame = imread([file_dir filenames(k).name]);
     
     % Retrieve the binary matrix corresponding to the
     % moving object pixels
-    binaryImage3D = RGBremoveBG(frame, background, 30);
+    binaryImage3D = RGBremoveBG(frame, background, 25);
     
     % OR or AND together the RGB or HSV binary values
     % to return a 2D binary image matrix.
@@ -41,9 +41,8 @@ for k = 300 : size(filenames,1)
     blobFinder = vision.BlobAnalysis('AreaOutputPort',true,...
                                    'CentroidOutputPort',true,...
                                    'BoundingBoxOutputPort',true,...
-                                   'MinimumBlobArea', 50);                               
-    
-    [path1, path2] = updatePaths(path1, path2, binaryImage2D, blobFinder);    
+                                   'MinimumBlobArea', 50);    
+    [path1, path2] = updatePaths2(path1, path2, binaryImage2D, blobFinder);    
     
     display = drawPath(path1, display);
     display = display ./ 255;

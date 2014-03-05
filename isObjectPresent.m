@@ -25,6 +25,8 @@ end
 if  isempty(centers)
     object1Present = false;
     object2Present = false;
+else
+    object1Present = true;
 end
 
 end
