@@ -20,7 +20,7 @@ path2 = zeros(500,2);
 highestReached=0;
 
 % Cycle through each frame in the set of images
-for k = 280 : size(filenames,1)
+for k = 230 : size(filenames,1)
     
     % Read the frame from the source directory
     frame = imread([file_dir filenames(k).name]);
