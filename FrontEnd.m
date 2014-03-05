@@ -43,7 +43,8 @@ for k = 280 : size(filenames,1)
     blobFinder = vision.BlobAnalysis('AreaOutputPort',true,...
                                    'CentroidOutputPort',true,...
                                    'BoundingBoxOutputPort',true,...
-                                   'MinimumBlobArea', 50);    
+                                   'MinimumBlobArea', 50);
+                               
     [path1, path2] = updatePaths2(path1, path2, binaryImage2D, blobFinder);    
     
     [display,highestReached] = drawPath(path1,0,0,255,display,highestReached);
