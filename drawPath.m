@@ -10,7 +10,9 @@ for k=1 : length(found)
     flippedCenter = fliplr(uint16(center));
     
     %draws path of object
-    image(flippedCenter(1), flippedCenter(2),:) = [r g b];
+    if flippedCenter(1) > 0 && flippedCenter(2) > 0
+        image(flippedCenter(1), flippedCenter(2),:) = [r g b];
+    end
 end
 
 end
