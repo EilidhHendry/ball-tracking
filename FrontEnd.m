@@ -18,7 +18,7 @@ path1 = zeros(500,2);
 path2 = zeros(500,2);
 
 % Cycle through each frame in the set of images
-for k = 1100 : size(filenames,1)
+for k = 230 : size(filenames,1)
     
     % Read the frame from the source directory
     frame = imread([file_dir filenames(k).name]);
@@ -41,7 +41,8 @@ for k = 1100 : size(filenames,1)
     blobFinder = vision.BlobAnalysis('AreaOutputPort',true,...
                                    'CentroidOutputPort',true,...
                                    'BoundingBoxOutputPort',true,...
-                                   'MinimumBlobArea', 50);    
+                                   'MinimumBlobArea', 50);
+                               
     [path1, path2] = updatePaths2(path1, path2, binaryImage2D, blobFinder);    
     
     display = drawPath(path1, display);
