@@ -1,7 +1,7 @@
 % Project Front-End for frameing main output.
 
 % Location of image files
-file_dir = 'Video3/';
+file_dir = 'Video2/';
 filenames = dir([file_dir '*.jpg']);
 
 % Initialise the frame handle
@@ -19,6 +19,8 @@ highestReached1=0;
 highestReached2=0;
 highestPoint1=[5 5];
 highestPoint2=[5 5];    % initialise highest point
+
+h2 = 1;
 
 % Cycle through each frame in the set of images
 
@@ -55,6 +57,47 @@ for k = 250 : size(filenames,1)
     
     [frame,highestReached1,highestPoint1] = drawPath(path1,255,0,0,frame,highestReached1,highestPoint1);
     [frame,highestReached2,highestPoint2] = drawPath(path2,0,0,255,frame,highestReached2,highestPoint2);
+    
+    % Ball detection 
+    
+    ballFinder = regionprops(binaryImage2D,'Area','BoundingBox', ...
+        'MajorAxisLength', 'MinorAxisLength', 'ConvexArea', 'Solidity');
+    itemProps = struct2cell(ballFinder);
+    areas = cell2mat(itemProps(1,:));
+    boxes = zeros(10,4);
+    for i=1 : length(itemProps(1,:))
+        boxes(i,:) = cell2mat(itemProps(2,i));
+    end    
+    bigAxes = cell2mat(itemProps(3,:));
+    smallAxes = cell2mat(itemProps(4,:));
+    convexArea = cell2mat(itemProps(5,:));
+    solidities = cell2mat(itemProps(6,:));
+    
+    objects = zeros(2,5,4);
+    
+    count = 1;
+    
+    for i=1 : length(itemProps(1,:))
+        if areas(i) > 100            
+            objects(count,1,:) = areas(i);
+            objects(count,2,:) = boxes(i,:);            
+            objects(count,3,:) = bigAxes(i);
+            objects(count,4,:) = smallAxes(i);
+            objects(count,5,:) = convexArea(i);
+            objects(count,6,:) = solidities(i);
+            count = count + 1;
+        end        
+    end
+    
+    % Iterate over number of objects in image
+    for i=1 : length(find(objects(:,1,1)))
+        axisRatio = objects(i,4,1) / objects(i,3,1);
+        convexAreaRatio = objects(i,1,1) / objects(i,5,1);
+        if objects(i,6,1) > 0.94 && axisRatio > 0.67 ...
+                && convexAreaRatio > 0.95
+            frame = drawRect(frame,objects(i,2,:), 0, 0, 255);
+        end
+    end
     
     % Uncomment to display binary image:
     frame = frame ./ 255;

@@ -23,7 +23,7 @@ for k=1 : length(found)
 
         %Check if the current point is lower than the previous point
             if center(2)>path(k-1,2) && highestReached==0 && totalDist>4
-                pause(3);
+                %pause(3);
                 highestPoint=fliplr(uint16(center));
                 highestReached=1;
             end
