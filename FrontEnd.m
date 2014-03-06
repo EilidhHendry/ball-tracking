@@ -22,7 +22,8 @@ highestReached2=0;
 
 % Cycle through each frame in the set of images
 
-for k = 800 : size(filenames,1)
+for k = 1 : size(filenames,1)
+
     
     % Read the frame from the source directory
     frame = imread([file_dir filenames(k).name]);
@@ -47,7 +48,7 @@ for k = 800 : size(filenames,1)
                                    'BoundingBoxOutputPort',true,...
                                    'MinimumBlobArea', 100);
                                
-    [path1, path2] = updatePaths2(path1, path2, binaryImage2D, blobFinder);    
+    [path1, path2] = updatePaths(path1, path2, binaryImage2D, blobFinder);    
     
     [display,highestReached1] = drawPath(path1,255,0,0,display,highestReached1);
     [display,highestReached2] = drawPath(path2,0,0,255,display,highestReached2);
