@@ -1,7 +1,7 @@
 % Project Front-End for displaying main output.
 
 % Location of image files
-file_dir = 'Video2/';
+file_dir = 'Video1/';
 filenames = dir([file_dir '*.jpg']);
 
 % Initialise the display handle
@@ -20,7 +20,7 @@ path2 = zeros(500,2);
 highestReached=0;
 
 % Cycle through each frame in the set of images
-for k = 570 : size(filenames,1)
+for k = 1 : size(filenames,1)
     
     % Read the frame from the source directory
     frame = imread([file_dir filenames(k).name]);
@@ -45,7 +45,7 @@ for k = 570 : size(filenames,1)
                                    'BoundingBoxOutputPort',true,...
                                    'MinimumBlobArea', 50);
                                
-    [path1, path2] = updatePaths2(path1, path2, binaryImage2D, blobFinder);    
+    [path1, path2] = updatePaths(path1, path2, binaryImage2D, blobFinder);    
     
     [display,highestReached] = drawPath(path1,255,0,0,display,highestReached);
     [display,highestReached] = drawPath(path2,0,0,255,display,highestReached);
