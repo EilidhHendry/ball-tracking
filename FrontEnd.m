@@ -1,10 +1,10 @@
-% Project Front-End for displaying main output.
+% Project Front-End for frameing main output.
 
 % Location of image files
-file_dir = 'Video1/';
+file_dir = 'Video3/';
 filenames = dir([file_dir '*.jpg']);
 
-% Initialise the display handle
+% Initialise the frame handle
 frame = imread([file_dir filenames(1).name]);
 figure(1); h1 = imshow(frame);
 
@@ -12,17 +12,17 @@ figure(1); h1 = imshow(frame);
 % background = RGBmedianBG(file_dir, filenames, 50);
 background = frame;
 
-display = zeros(480,640,3);
-
 path1 = zeros(500,2);
 path2 = zeros(500,2);
 
 highestReached1=0;
 highestReached2=0;
+highestPoint1=[5 5];
+highestPoint2=[5 5];    % initialise highest point
 
 % Cycle through each frame in the set of images
 
-for k = 1 : size(filenames,1)
+for k = 250 : size(filenames,1)
 
     
     % Read the frame from the source directory
@@ -36,12 +36,15 @@ for k = 1 : size(filenames,1)
     % to return a 2D binary image matrix.
     binaryImage2D = ORthresh(binaryImage3D);
     %binaryImage2D = ANDthresh(binaryImage3D);
+          
+    % Uncomment to display binary image
+    frame = zeros(size(frame));
+    frame(:,:,1) = binaryImage2D;
+    frame(:,:,2) = binaryImage2D;
+    frame(:,:,3) = binaryImage2D;
+    frame = frame .*255;
     
-    display(:,:,1) = binaryImage2D;
-    display(:,:,2) = binaryImage2D;
-    display(:,:,3) = binaryImage2D;
-    display = display .*255;
-    %display = segmentColorImage(binaryImage2D, frame);
+    %frame = segmentColorImage(binaryImage2D, frame);
     
     blobFinder = vision.BlobAnalysis('AreaOutputPort',true,...
                                    'CentroidOutputPort',true,...
@@ -50,12 +53,14 @@ for k = 1 : size(filenames,1)
                                
     [path1, path2] = updatePaths(path1, path2, binaryImage2D, blobFinder);    
     
-    [display,highestReached1] = drawPath(path1,255,0,0,display,highestReached1);
-    [display,highestReached2] = drawPath(path2,0,0,255,display,highestReached2);
-    display = display ./ 255;
+    [frame,highestReached1,highestPoint1] = drawPath(path1,255,0,0,frame,highestReached1,highestPoint1);
+    [frame,highestReached2,highestPoint2] = drawPath(path2,0,0,255,frame,highestReached2,highestPoint2);
+    
+    % Uncomment to display binary image:
+    frame = frame ./ 255;
     
     % Display image
-    set(h1, 'CData', display);
+    set(h1, 'CData', frame);
     drawnow('expose');
     disp(['showing frame ' num2str(k)]);
 end
