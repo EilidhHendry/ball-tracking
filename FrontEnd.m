@@ -1,7 +1,7 @@
 % Project Front-End for frameing main output.
 
 % Location of image files
-file_dir = 'Video2/';
+file_dir = 'Video1/';
 filenames = dir([file_dir '*.jpg']);
 
 % Initialise the frame handle
@@ -16,7 +16,7 @@ path1 = zeros(500,2);
 path2 = zeros(500,2);
 
 highestReached1=0;
-highestReached2=0;      % 0/1 for highest point reached or not
+highestReached2=0;      % 0/1 bool for highest point reached or not
 
 highestPoint1=[5 5];
 highestPoint2=[5 5];    % initialise highest point
@@ -25,7 +25,7 @@ h2 = 1;
 
 % Cycle through each frame in the set of images
 
-for k = 250 : size(filenames,1)
+for k = 200 : size(filenames,1)
 
     
     % Read the frame from the source directory
@@ -34,6 +34,9 @@ for k = 250 : size(filenames,1)
     % Retrieve the binary matrix corresponding to the
     % moving object pixels
     binaryImage3D = RGBremoveBG(frame, background, 25);
+
+    %HSV image
+    %binaryImage3D = HSVremoveBG(frame, background);
     
     % OR or AND together the RGB or HSV binary values
     % to return a 2D binary image matrix.
@@ -52,7 +55,7 @@ for k = 250 : size(filenames,1)
     blobFinder = vision.BlobAnalysis('AreaOutputPort',true,...
                                    'CentroidOutputPort',true,...
                                    'BoundingBoxOutputPort',true,...
-                                   'MinimumBlobArea', 100);
+                                   'MinimumBlobArea', 50);
                                
     [path1, path2] = updatePaths(path1, path2, binaryImage2D, blobFinder);    
     
@@ -60,7 +63,6 @@ for k = 250 : size(filenames,1)
     [frame,highestReached2,highestPoint2] = drawPath(path2,0,0,255,frame,highestReached2,highestPoint2);
     
     % Ball detection 
-    
     frame = detectBalls(binaryImage2D, frame);
     
     % Uncomment to display binary image:
