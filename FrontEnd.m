@@ -1,7 +1,7 @@
 % Project Front-End for frameing main output.
 
 % Location of image files
-file_dir = 'Video1/';
+file_dir = 'Video5/';
 filenames = dir([file_dir '*.jpg']);
 
 % Initialise the frame handle
@@ -17,15 +17,25 @@ path2 = zeros(500,2);
 
 highestReached1=0;
 highestReached2=0;      % 0/1 bool for highest point reached or not
+isBall1=0;
+isBall2=0;
 
 highestPoint1=[5 5];
-highestPoint2=[5 5];    % initialise highest point
+highestPoint2=[5 5];    % initialise highest points
+
+ballFrames1 = 0;
+ballFrames2 = 0;
+objectFrames1 = 0;
+objectFrames2 = 0;
+
+obj1 = [0 0];
+obj2 = [0 0];
 
 h2 = 1;
 
 % Cycle through each frame in the set of images
 
-for k = 200 : size(filenames,1)
+for k = 1 : size(filenames,1)
 
     
     % Read the frame from the source directory
@@ -33,7 +43,7 @@ for k = 200 : size(filenames,1)
     
     % Retrieve the binary matrix corresponding to the
     % moving object pixels
-    binaryImage3D = RGBremoveBG(frame, background, 25);
+    binaryImage3D = RGBremoveBG(frame, background, 15, 15, 15);
 
     %HSV image
     %binaryImage3D = HSVremoveBG(frame, background);
@@ -44,29 +54,37 @@ for k = 200 : size(filenames,1)
     %binaryImage2D = ANDthresh(binaryImage3D);
           
     % Uncomment to display binary image
-    frame = zeros(size(frame));
-    frame(:,:,1) = binaryImage2D;
-    frame(:,:,2) = binaryImage2D;
-    frame(:,:,3) = binaryImage2D;
-    frame = frame .*255;
+%     frame = zeros(size(frame));
+%     frame(:,:,1) = binaryImage2D;
+%     frame(:,:,2) = binaryImage2D;
+%     frame(:,:,3) = binaryImage2D;
+%     frame = frame .*255;
     
     %frame = segmentColorImage(binaryImage2D, frame);
-    
     blobFinder = vision.BlobAnalysis('AreaOutputPort',true,...
                                    'CentroidOutputPort',true,...
                                    'BoundingBoxOutputPort',true,...
-                                   'MinimumBlobArea', 50);
-                               
-    [path1, path2] = updatePaths(path1, path2, binaryImage2D, blobFinder);    
+                                   'MinimumBlobArea', 120);
     
-    [frame,highestReached1,highestPoint1] = drawPath(path1,255,0,0,frame,highestReached1,highestPoint1);
-    [frame,highestReached2,highestPoint2] = drawPath(path2,0,0,255,frame,highestReached2,highestPoint2);
+    % Update or initialise the object paths
+    [path1, path2, ballFrames1,ballFrames2,objectFrames1,objectFrames2] = updatePaths(path1, path2, binaryImage2D, blobFinder,ballFrames1,ballFrames2,objectFrames1,objectFrames2);
+    
+    if ~isempty(find(path1))
+        obj1 = path1(length(find(path1(:,1))),:);
+    end
+    if ~isempty(find(path2))
+        obj2 = path2(length(find(path2(:,1))),:);
+    end
     
     % Ball detection 
-    frame = detectBalls(binaryImage2D, frame);
+    [frame, ballFrames1, ballFrames2, objectFrames1, objectFrames2] = detectBalls(binaryImage2D, frame, ballFrames1, ballFrames2, objectFrames1, objectFrames2, obj1, obj2);
+    
+    % Draw object paths and get the highest point
+    [frame,highestReached1,highestPoint1,isBall1,isBall2] = drawPath(path1,70,226,243,frame,highestReached1,highestPoint1,ballFrames1,objectFrames1,isBall1,isBall2,true,false);
+    [frame,highestReached2,highestPoint2,isBall1,isBall2] = drawPath(path2,70,226,243,frame,highestReached2,highestPoint2,ballFrames2,objectFrames2,isBall1,isBall2,false,true);    
     
     % Uncomment to display binary image:
-    frame = frame ./ 255;
+%     frame = frame ./ 255;
     
     % Display image
     set(h1, 'CData', frame);

@@ -1,3 +1,6 @@
+% Find the center of mass of all of the logical
+% 1 pixels in a binary image
+
 function center = getCenter(image)
 
 area = length(find(image(:,:,1)));

@@ -2,7 +2,7 @@
 % produces a binary logical matrix for subtracted values
 % above a given threshold.
 
-function binaryImage = RGBremoveBG(frame, background, threshold)
+function binaryImage = RGBremoveBG(frame, background, Rthresh, Gthresh, Bthresh)
     
     % Convert the frame values to floating point doubles
     frame = double(frame);
@@ -12,7 +12,9 @@ function binaryImage = RGBremoveBG(frame, background, threshold)
     frameDiff=abs(background-frame);
     
     % Logical matrix encoding RGB values above the threshold
-    binaryImage = frameDiff > threshold;
+    binaryImage(:,:,1) = frameDiff(:,:,1) > Rthresh;
+    binaryImage(:,:,2) = frameDiff(:,:,2) > Gthresh;
+    binaryImage(:,:,3) = frameDiff(:,:,3) > Bthresh;
     
     
 end

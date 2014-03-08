@@ -1,12 +1,16 @@
-function [points1, points2] = updatePaths(points1, points2, binImage, blobFinder)
+% Will initialise or update the paths of the objects being found
+% by the blob finder in the binary image.
+
+function [points1, points2,ballFrames1,ballFrames2,objectFrames1,objectFrames2] = updatePaths(points1, points2, binImage, blobFinder,ballFrames1,ballFrames2,objectFrames1,objectFrames2)
 
 [area,centers] = step(blobFinder, binImage);
 
-size1 = length(find(points1(:,1)));
-size2 = length(find(points2(:,1)));
+size1 = length(find(points1(:,1))); % Number of previous centroids
+size2 = length(find(points2(:,1))); % in the path
 init1 = false;   % Flag for indicating if object was 
 init2 = false;   % initialised this frame
 
+% Check which objects are present in the frame
 [object1Present, object2Present] = isObjectPresent(points1, points2, centers);
 
 % If initialising two objects at once, we want to initialise the highest
@@ -26,6 +30,8 @@ if object1Present && size1 == 0
         points1(1,:) = highestcenter;
         size1 = 1;
         init1 = true;
+        ballFrames1 = 0;
+        objectFrames1 = 0;
     end
 end
    
@@ -39,6 +45,8 @@ if object1Present && object2Present && size2 == 0 && ~init1
         points2(1,:) = centers(1,:);
         size2 = 1;
         init2 = true;
+        ballFrames2 = 0;
+        objectFrames2 = 0;
     end    
 end
 
@@ -64,6 +72,8 @@ if object1Present && object2Present && length(centers(:,1)) >= 2 ...
     && ~init1 && ~init2 && size1 > 0 && size2 > 0
     min1 = 1000;
     min2 = 1000;
+    % Use the euclidian distance to make sure the right
+    % centers are being assigned to the right paths.
     for k=1 : length(centers(:,1))
         dist1 = euclidDist(centers(k,:),points1(size1,:));
         dist2 = euclidDist(centers(k,:),points2(size2,:));

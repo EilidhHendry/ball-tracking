@@ -1,19 +1,24 @@
-function [image,highestReached, highestPoint] = drawPath(path,r,g,b, image, highestReached, highestPoint)
+% Draws the path of an object and calculates and draws
+% its highest point.
+
+function [image,highestReached, highestPoint,isBall1, isBall2] = drawPath(path,r,g,b, image, highestReached, highestPoint, ballFrames, objectFrames, isBall1, isBall2,ball1,ball2)
 
 %if there is no path and the threshold is 1 set it to 0 again (to clear
 %path)
 if path(1)==0 && highestReached==1
-    highestPoint = [5 5];
+    highestPoint = [5 5];           % If the path is empty initialise
     highestReached=0;
-end
+    isBall1 =0;                      % the highest point, and set the 
+    isBall2 =0; 
+end                                 % flag to false.
 
-found = find(path(:,1));
+found = find(path(:,1));  % length of the path
 
 for k=1 : length(found)
      
     center = path(k,:);
        
-    %if there is more than 25 points found to handle noise
+    % Only check for highest point if the path has at least 25 points
     if length(found)>25
         if k>3
             y=1;
@@ -21,23 +26,33 @@ for k=1 : length(found)
             dist2=euclidDist((path(k-2,:)),(path(k-1)));
             totalDist=dist+dist2;
 
-        %Check if the current point is lower than the previous point
+        % Check if the current point is lower than the previous point
+        % Make sure distance of last three points is less than 4 pixels.
             if center(2)>path(k-1,2) && highestReached==0 && totalDist>4
-                %pause(3);
+                if ballFrames > objectFrames
+                    pause(3);
+                    if ball1
+                        isBall1=1;   
+
+                    elseif ball2
+                        isBall2=1;
+                    end
+                end
                 highestPoint=fliplr(uint16(center));
                 highestReached=1;
             end
         end
     end
 
-    %flip and cast to int in order to draw
+    % Flip and cast to int in order to draw
     flippedCenter = fliplr(uint16(center));
 
-    %draws path of object
+    % Draws path of object
     if flippedCenter(1) > 0 && flippedCenter(2) > 0
         
         image(flippedCenter(1), flippedCenter(2),:) = [r g b];
-        if highestReached == 1
+        % Draw highest point.
+        if highestReached == 1 && ((isBall1 && ball1) || (isBall2 && ball2))
             image(highestPoint(1), highestPoint(2),:) = [255 255 255];
             image(highestPoint(1)+1, highestPoint(2),:) = [255 255 255];
             image(highestPoint(1)+2, highestPoint(2),:) = [255 255 255];

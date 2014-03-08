@@ -1,3 +1,6 @@
+% Draws a rectangle with the provided colour onto 
+% the input image.
+
 function image = drawRect(image, rect, R, G, B)
 
 rect = uint16(rect);
